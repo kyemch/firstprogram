@@ -1,4 +1,4 @@
-# Personality Quiz Template in Python
+import random  # Import the random module
 
 # Define the questions and answers
 questions = [
@@ -34,7 +34,6 @@ questions = [
             "e": "dramatic"
         }
     },
-
     {
         "question": "What kind of music do you enjoy listening to?",
         "options": {
@@ -50,7 +49,6 @@ questions = [
             "d": "dramatic"
         }
     },
-
     {
         "question": "Hey, do you have the time?",
         "options": {
@@ -65,6 +63,23 @@ questions = [
             "c": "rude",
             "d": "smart-ass"
         }
+    },
+    {
+
+        "question": "What kind of pet do you like most?",
+        "options": {
+            "a": "dogs",
+            "b": "cats",
+            "c": "birds",
+            "d": "fish"
+        },
+        "scores": {
+            "a": "energetic",
+            "b": "relaxed",
+            "c": "extrovert",
+            "d": "introvert"
+        }
+
     },
     # Add more questions as needed
 ]
@@ -86,14 +101,20 @@ def reset_scores():
         "rude": 0,
         "smart-ass": 0,
         "energetic": 0
-
     }
 
 personality_scores = reset_scores()
 
 # Function to display questions and get user input
-def ask_questions():
-    for q in questions:
+def ask_questions(num_questions=3): # Change this number to the desired number of questions
+    global personality_scores
+    # Shuffle the questions
+    random.shuffle(questions)
+
+    # Limit the number of questions
+    selected_questions = questions[:num_questions]
+
+    for q in selected_questions:
         print(q["question"])
         for option, answer in q["options"].items():
             print(f"{option}) {answer}")
@@ -113,26 +134,7 @@ def calculate_result():
     # Find the highest score(s)
     max_score = max(personality_scores.values())
     result = [key for key, value in personality_scores.items() if value == max_score]
-    
     return result
-
-# Function to display questions and get user input
-def ask_questions():
-    global personality_scores
-    for q in questions:
-        print(q["question"])
-        for option, answer in q["options"].items():
-            print(f"{option}) {answer}")
-        choice = input("Enter your choice (a/b/c/d): ").lower()
-
-        # Ensure valid input
-        while choice not in q["options"]:
-            print("Invalid choice, please choose again.")
-            choice = input("Enter your choice (a/b/c/d): ").lower()
-
-        # Update the personality score
-        selected_personality = q["scores"][choice]
-        personality_scores[selected_personality] += 1
 
 # Function to display the result
 def display_result(result):
@@ -161,7 +163,7 @@ def restart_quiz():
 # Main function to run the quiz
 def run_quiz():
     print("Welcome to the Personality Quiz!")
-    ask_questions()
+    ask_questions(num_questions=3) # Change this number to the desired number of questions
     result = calculate_result()
     display_result(result)
     restart_quiz()
