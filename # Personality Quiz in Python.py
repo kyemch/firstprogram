@@ -81,6 +81,26 @@ questions = [
         }
 
     },
+    {
+      
+        "question": "What's your favorite flavor profile?",
+        "options": {
+            "a": "spicy",
+            "b": "sour",
+            "c": "salty",
+            "d": "sweet",
+            "e": "bitter"
+            
+        },
+        "scores": {
+            "a": "adventurous",
+            "b": "smart-ass",
+            "c": "extrovert",
+            "d": "fun-loving",
+            "e": "relaxed"
+        }
+        
+    },
     # Add more questions as needed
 ]
 
@@ -104,6 +124,32 @@ def reset_scores():
     }
 
 personality_scores = reset_scores()
+
+# Define dynamic personality combinations
+dynamic_personalities = {
+    frozenset(["extrovert", "fun-loving"]): "Life of the Party",
+    frozenset(["introvert", "intellectual"]): "Thoughtful Thinker",
+    frozenset(["energetic", "adventurous"]): "Fearless Explorer",
+    frozenset(["relaxed", "introvert"]): "Meditative",
+    frozenset(["relaxed", "romantic"]): "Chill Romantic",
+    frozenset(["artistic", "dramatic"]): "Creative Visionary",
+    frozenset(["artistic", "smart-ass"]): "Witty Poet",
+    frozenset(["sympathetic", "smart-ass"]): "Empathetic Wit",
+    # Add more combinations as needed
+}
+
+
+# Function to prompt for the number of questions
+def get_number_of_questions():
+    while True:
+        try:
+            num_questions = int(input("How many questions would you like to answer? (1-5): "))
+            if 1 <= num_questions <= len(questions):
+                return num_questions
+            else:
+                print(f"Please choose a number between 1 and {len(questions)}.")
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
 
 # Function to display questions and get user input
 def ask_questions(num_questions=3): # Change this number to the desired number of questions
@@ -133,17 +179,28 @@ def ask_questions(num_questions=3): # Change this number to the desired number o
 def calculate_result():
     # Find the highest score(s)
     max_score = max(personality_scores.values())
-    result = [key for key, value in personality_scores.items() if value == max_score]
-    return result
+    top_traits = [key for key, value in personality_scores.items() if value == max_score]
+    
+    # Check for predefined dynamic personalities
+    if len(top_traits) > 1:
+        for combination, description in dynamic_personalities.items():
+            if combination.issubset(set(top_traits)):
+                return description  # Return the dynamic personality
+    
+    # If no predefined combination matches, return individual traits
+    return top_traits if len(top_traits) > 1 else top_traits[0]
 
 # Function to display the result
 def display_result(result):
-    if len(result) == 1:
+    if isinstance(result, str):  # If the result is a dynamic personality
+        print(f"Your personality type is: {result}")
+    elif len(result) == 1:  # Single dominant trait
         print(f"Your personality type is: {result[0]}")
-    else:
+    else:  # Multiple dominant traits
         print("You have multiple dominant personality traits:")
         for res in result:
             print(f"- {res}")
+
 
 # Function to restart the quiz
 def restart_quiz():
@@ -163,7 +220,8 @@ def restart_quiz():
 # Main function to run the quiz
 def run_quiz():
     print("Welcome to the Personality Quiz!")
-    ask_questions(num_questions=3) # Change this number to the desired number of questions
+    num_questions = get_number_of_questions()  # Get the user's preferred number of questions
+    ask_questions(num_questions=num_questions)  # Pass it to the ask_questions function
     result = calculate_result()
     display_result(result)
     restart_quiz()
