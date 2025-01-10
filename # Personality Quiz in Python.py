@@ -101,6 +101,30 @@ questions = [
         }
         
     },
+    {
+      
+        "question": "What's your favorite color?",
+        "options": {
+            "a": "red",
+            "b": "blue",
+            "c": "green",
+            "d": "yellow",
+            "e": "orange",
+            "f": "purple",
+            "g": "pink"
+            
+        },
+        "scores": {
+            "a": "passionate",
+            "b": "relaxed",
+            "c": "intellectual",
+            "d": "dramatic",
+            "e": "energetic",
+            "f": "artistic",
+            "g": "fun-loving"
+        }
+        
+    },
     # Add more questions as needed
 ]
 
@@ -120,7 +144,8 @@ def reset_scores():
         "unaware": 0,
         "rude": 0,
         "smart-ass": 0,
-        "energetic": 0
+        "energetic": 0,
+        "passionate": 0
     }
 
 personality_scores = reset_scores()
